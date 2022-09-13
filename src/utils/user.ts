@@ -32,7 +32,6 @@ export async function login(values: ILoginData) {
 
 export function logout() {
   rl.forEach((r) => {
-    console.log(r);
     if (router.hasRoute(r.r.name!)) router.removeRoute(r.r.name!);
   });
   store.remove(CacheEnum.TOKEN_NAME);

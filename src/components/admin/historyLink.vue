@@ -26,7 +26,6 @@
 import menuStore from "@/stores/menuStore";
 const menu = menuStore();
 const route = useRoute();
-console.log(route);
 </script>
 
 <style lang="scss" scoped></style>

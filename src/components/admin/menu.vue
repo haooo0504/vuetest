@@ -55,7 +55,6 @@ const menu = menuStore();
 const refmenu = storeToRefs(menu);
 const route = useRoute();
 watch(route, () => menu.setCurrentMenu(route), { immediate: true });
-console.log(menu.menus);
 
 // const reset = () => {
 //   menu.menus.forEach((menu) => {

@@ -51,8 +51,6 @@ const user = userStore();
 const { Form, Field, ErrorMessage } = v;
 
 const onSubmit = async (values: any) => {
-  console.log(123);
-
   user.login(values);
 };
 

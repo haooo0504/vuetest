@@ -88,7 +88,6 @@ export default defineStore({
           return a.meta.number! - b.meta.number!;
         })
         .map((route) => {
-          console.log(route);
           let menu: IMenu = { ...route.meta.menu };
 
           menu.children = route.children

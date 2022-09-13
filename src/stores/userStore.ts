@@ -45,7 +45,6 @@ export default defineStore({
           await utils.store.get(CacheEnum.TOKEN_NAME)
         )) as null | IUser;
       }
-      console.log(this.info);
     },
     async permissionlist() {
       await this.getUserInfo();
@@ -60,9 +59,7 @@ export default defineStore({
             : true;
         });
       });
-      console.log(routes1);
       routes1.forEach((r) => router.addRoute(r));
-      console.log(router.getRoutes());
       // rl.forEach((r: any) => {
       //   if (this.info?.permissions.includes(r.r.meta.permission)) {
       //     console.log(r.re, r.r);
@@ -70,7 +67,6 @@ export default defineStore({
       //     router.addRoute(r.re, r.r);
       //   }
       // });
-      console.log(router.getRoutes());
 
       // routes = routes.map((route) => {
       //   route.children = route.children?.filter((r) => {

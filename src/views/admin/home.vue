@@ -5,7 +5,7 @@
         class="box-card cursor-pointer"
         v-for="(card, index) in cards"
         :key="index"
-        shadow="hover"
+        shadow="never"
       >
         <template #header>
           <div class="card-header">
@@ -122,4 +122,25 @@ onUnmounted(() => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.box-card {
+  @apply flex flex-col justify-center rounded-[30px] duration-300 cursor-pointer;
+  // box-shadow: 10px 10px 30px #ededed,
+  //   -10px -10px 30px #ededed;
+
+  &:hover {
+    box-shadow: 10px 10px 30px #b4b4b4, -10px -10px 30px #ffffff;
+
+    * {
+      color: var(--ft-color);
+    }
+  }
+}
+.el-card {
+  --el-card-bg-color: #ffffff;
+
+  &:hover {
+    --el-card-bg-color: rgb(255, 255, 255);
+  }
+}
+</style>

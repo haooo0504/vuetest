@@ -231,15 +231,11 @@ const changeActive = (user: IUser) => {
     type: "warning",
   })
     .then(() => {
-      firebaseStore.update("users", user.name, { active: user.active });
+      firebaseStore.update("users", user.account, { active: user.active });
     })
     .catch(() => {
       user.active = !user.active;
     });
-};
-
-const c = () => {
-  console.log(123);
 };
 
 // 修改資料
@@ -249,7 +245,6 @@ const editId = ref<string>("");
 const editUser = async (id: string) => {
   editId.value = id;
   const user = (await firebaseStore.get("users", id)) as IUser;
-  console.log(id);
   dialogVisible.value = true;
   editPermissions.value = user.permissions;
 };
@@ -263,7 +258,6 @@ const changePermissions = () => {
 // 刪除用戶
 const delUser = (id: string) => {
   editId.value = id;
-  console.log(id);
   if (editId.value == "admin123") {
     msg("此為開發者帳號不能刪除", "error");
   } else {

@@ -16,7 +16,6 @@ async function autoload(router: Router) {
   const user = userStore();
   routes.forEach((route) => {
     let re = route.name!;
-    console.log(route);
     route.children = route.children?.filter((r) => {
       const permission = r.meta?.permission;
       if (permission) {
@@ -25,9 +24,7 @@ async function autoload(router: Router) {
       return permission ? user.info?.permissions?.includes(permission) : true;
     });
   });
-  console.log(routes);
   routes.forEach((r) => router.addRoute(r));
-  console.log(router.getRoutes());
 }
 export default autoload;
 // const routes = env.VITE_ROUTE_AUTOLOAD ? getRoutes() : ([] as RouteRecordRaw[]);

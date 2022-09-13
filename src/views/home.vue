@@ -4,7 +4,7 @@
       src="/public/image/bg.jpg"
       class="absolute object-cover h-full w-full"
     />
-    <div class="absolute md:left-20 md:w-[33%] w-[50%]">
+    <div class="absolute md:left-20 md:w-[33%] w-[100%]">
       <div class="bgtitle flex justify-center">
         <p id="typed"></p>
       </div>
@@ -62,7 +62,7 @@ onUnmounted(() => {
       div {
         @apply mt-5;
         .button {
-          @apply text-base px-3 py-2;
+          @apply text-base px-3 py-1.5;
         }
       }
     }

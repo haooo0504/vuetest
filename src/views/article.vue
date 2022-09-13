@@ -44,12 +44,8 @@ const route = useRoute();
 watch(route, () => menu.setCurrentMenu(route), { immediate: true });
 
 const isCollapse = ref(true);
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-};
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-};
+const handleOpen = (key: string, keyPath: string[]) => {};
+const handleClose = (key: string, keyPath: string[]) => {};
 </script>
 
 <style lang="scss" scoped>

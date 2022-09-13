@@ -136,7 +136,6 @@ const sub = () => {
   cropper.value?.getCropBlob(async (data: Blob) => {
     loading.value = true;
     await storageStore.upload(data, `users/${props.userAccount}`).then(() => {
-      console.log(data);
       storageStore.getURL(`users/${props.userAccount}`).then((url) => {
         firebaseStore
           .update("users", props.userAccount, { avatar: url })
