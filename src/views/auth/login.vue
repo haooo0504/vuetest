@@ -14,7 +14,7 @@
           <ErrorMessage name="account" class="error" />
           <Field
             name="password"
-            value="admin123"
+            value="admintest123"
             class="input mt-5"
             label="密碼"
             type="password"
