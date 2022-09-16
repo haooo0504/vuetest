@@ -44,7 +44,7 @@
             v-model="RegiserForm.token"
             autocomplete="off"
             clearable
-            placeholder="邀請碼"
+            placeholder="邀請碼 - 123456"
             class="mt-[15px]"
           />
         </el-form-item>
