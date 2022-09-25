@@ -35,7 +35,7 @@ export function logout() {
     if (router.hasRoute(r.r.name!)) router.removeRoute(r.r.name!);
   });
   store.remove(CacheEnum.TOKEN_NAME);
-  store.remove(CacheEnum.USER_INFO);
+  // store.remove(CacheEnum.USER_INFO);
   store.remove(CacheEnum.HISROTY_MENU);
   store.remove(CacheEnum.CURRENT_USER);
   store.remove(CacheEnum.CURRENT_PHOTO);

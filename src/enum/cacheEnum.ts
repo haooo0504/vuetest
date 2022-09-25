@@ -9,7 +9,7 @@ export enum CacheEnum {
 
   PERMISSIONS_MENU = "permissions_menu",
 
-  USER_INFO = "user_info",
+  // USER_INFO = "user_info",
   CURRENT_USER = "current_user",
   CURRENT_PHOTO = "current_photo",
 

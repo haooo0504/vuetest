@@ -97,7 +97,7 @@ export default defineStore({
                 displayName: userForm.account,
               })
                 .then(async () => {
-                  this.firebasestore.add("users", userForm.account, {
+                  await this.firebasestore.add("users", userForm.account, {
                     ...userForm,
                     permissions: [],
                     active: true,
@@ -106,7 +106,7 @@ export default defineStore({
                     "users",
                     userForm.account
                   )) as IUser;
-                  utils.store.set(CacheEnum.USER_INFO, this.info);
+                  // utils.store.set(CacheEnum.USER_INFO, this.info);
 
                   utils.store.set(CacheEnum.TOKEN_NAME, this.info.account);
                   await this.permissionlist();
@@ -131,7 +131,7 @@ export default defineStore({
 
       if (user != null && loginForm.password === user.password) {
         utils.store.set(CacheEnum.TOKEN_NAME, user.account);
-        utils.store.set(CacheEnum.USER_INFO, user);
+        // utils.store.set(CacheEnum.USER_INFO, user);
         await this.permissionlist();
         if (user.active) {
           const routeName =

@@ -45,7 +45,7 @@
         v-model="dialogName"
         title="更改名稱"
         @before-close="changeName"
-        @change-close="dialogName = false"
+        @change-close="changeclosename"
         @change-sub="changeName"
       >
         <template #default>
@@ -65,7 +65,7 @@
         v-model="dialogPassword"
         title="更改密碼"
         @before-close="changePassword"
-        @change-close="dialogPassword = false"
+        @change-close="changeclosepass"
         @change-sub="changePassword"
       >
         <template #default>
@@ -92,18 +92,18 @@ import { firebaseStores } from "@/stores/firebaseStore";
 import store from "@/utils/store";
 import { CacheEnum } from "@/enum/cacheEnum";
 
-const userimg = await store.get(CacheEnum.USER_INFO).avatar;
+// const userimg = await store.get(CacheEnum.USER_INFO).avatar;
+const userStore = userStores();
+const user = userStore.info;
 
 class updateUser {
   CreateForm = {
-    name: "",
-    password: "",
+    name: user?.name,
+    password: user?.password,
   };
 }
 const CreateForm = reactive(new updateUser().CreateForm);
 
-const userStore = userStores();
-const user = userStore.info;
 const avatarDialog = ref(false);
 
 const firebaseStore = firebaseStores();
@@ -125,6 +125,7 @@ const changeName = async () => {
     name: CreateForm.name,
   });
   document.querySelector("#useraccount")!.innerHTML = a;
+  CreateForm.name = a;
 
   dialogName.value = false;
 };
@@ -135,15 +136,30 @@ const changePassword = async () => {
   });
   const a = await firebaseStore.get("users", user?.account!);
   document.querySelector("#userpassword")!.innerHTML = a?.password!;
-
+  CreateForm.password = a?.password!;
   dialogPassword.value = false;
 };
-const openName = () => {
+const openName = async () => {
+  const a = await firebaseStore.get("users", user?.account!);
+  CreateForm.name = a!.name;
   dialogName.value = true;
 };
 
-const openPassword = () => {
+const openPassword = async () => {
+  const a = await firebaseStore.get("users", user?.account!);
+  CreateForm.password = a!.password;
   dialogPassword.value = true;
+};
+
+const changeclosename = async () => {
+  const a = await firebaseStore.get("users", user?.account!);
+  CreateForm.name = a!.name;
+  dialogName.value = false;
+};
+const changeclosepass = async () => {
+  const a = await firebaseStore.get("users", user?.account!);
+  CreateForm.password = a!.password;
+  dialogPassword.value = false;
 };
 </script>
 

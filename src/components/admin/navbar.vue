@@ -44,7 +44,7 @@
             >
             </el-image>
           </section>
-          {{ useStore.currentname ?? newuserinfo.name }}
+          {{ useStore.currentname ?? useStore.info?.name }}
         </span>
         <template #dropdown>
           <el-dropdown-menu>
@@ -79,7 +79,7 @@ import userStore from "@/stores/userStore";
 
 const menus = menuStore();
 const menu = storeToRefs(menus);
-const userimg = await util.store.get(CacheEnum.USER_INFO).avatar;
+// const userimg = await util.store.get(CacheEnum.USER_INFO).avatar;
 
 const useStore = user();
 const firebaseStore = firebaseStores();
@@ -90,10 +90,10 @@ const name = ref(useStore.info?.name);
 //     name.value = useStore.info?.name;
 //   }
 // );
-const newuserinfo = (await firebaseStore.get(
-  "users",
-  useStore.info?.account!
-)) as IUser;
+// const newuserinfo = (await firebaseStore.get(
+//   "users",
+//   useStore.info?.account!
+// )) as IUser;
 
 let isFullScreen = false;
 const fullscreen = () => {
