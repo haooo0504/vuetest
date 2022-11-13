@@ -171,7 +171,7 @@ export default defineStore({
       //   });
     },
     async changeName(id: string, account: string, obj: object) {
-      this.firebasestore.update(id, account, obj);
+      await this.firebasestore.update(id, account, obj);
       this.currentname = (await this.firebasestore.get(id, account))?.name;
       store.set(CacheEnum.CURRENT_USER, this.currentname);
       return this.currentname;
