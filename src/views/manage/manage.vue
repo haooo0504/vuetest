@@ -135,6 +135,7 @@
     <!-- 分頁 -->
     <div class="flex justify-center mt-5">
       <Pagination
+        ref="pageRef"
         v-model="currentPage"
         :pagesize="pagesize"
         layout="total, prev, pager, next"
@@ -282,6 +283,10 @@ const delUser = (id: string) => {
       });
   }
 };
+const pageRef = ref();
+onMounted(() => {
+  pageRef.value.aa();
+});
 </script>
 
 <style lang="scss" scoped></style>

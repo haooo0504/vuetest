@@ -242,3 +242,9 @@ const onClickMoveButton = (offset: any) => {
   setDateRangeText();
 };
 </script>
+<style lang="scss">
+.toastui-calendar-day-name__date {
+  font-size: 10px;
+  display: block;
+}
+</style>

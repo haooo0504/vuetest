@@ -26,4 +26,9 @@ export const INITIAL_EVENTS: EventInput[] = [
     title: "算法专训",
     start: `${todayStr}T12:00:00`,
   },
+  {
+    id: createEventId(),
+    title: "算法专训",
+    start: `${todayStr}T12:00:00`,
+  },
 ];
