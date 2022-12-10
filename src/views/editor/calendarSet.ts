@@ -1,4 +1,4 @@
-import type { EventInput } from "@fullcalendar/vue3";
+// import type { EventInput } from '@fullcalendar/vue3'
 
 // 事件Uid初始化
 let eventGuid = 0;
@@ -15,7 +15,7 @@ export function createEventId() {
 /**
  * @description 初始化事件对象
  */
-export const INITIAL_EVENTS: EventInput[] = [
+export const INITIAL_EVENTS: any = [
   {
     id: createEventId(),
     title: "全天安排",
@@ -23,12 +23,42 @@ export const INITIAL_EVENTS: EventInput[] = [
   },
   {
     id: createEventId(),
-    title: "算法专训",
-    start: `${todayStr}T12:00:00`,
+    title: "拜訪1",
+    start: `${todayStr} 12:00:00`,
+    position: "123",
   },
   {
     id: createEventId(),
-    title: "算法专训",
-    start: `${todayStr}T12:00:00`,
+    title: "拜訪2",
+    start: "2022-11-11 12:00:00",
+    end: "2022-11-11 17:00:00",
+    position: "123",
+  },
+  {
+    id: createEventId(),
+    title: "拜訪2",
+    start: "2022-11-01 12:00:00",
+    end: "2022-11-01 17:00:00",
+  },
+  {
+    id: createEventId(),
+    title: "拜訪2",
+    start: "2022-11-27 12:00:00",
+    end: "2022-11-27 17:00:00",
+    position: "123",
+  },
+  {
+    id: createEventId(),
+    title: "拜訪2",
+    start: "2022-12-07 12:00:00",
+    end: "2022-12-07 17:00:00",
+    position: "123",
+  },
+  {
+    id: createEventId(),
+    title: "拜訪2",
+    start: "2022-12-17 12:00:00",
+    end: "2022-12-17 17:00:00",
+    position: "123",
   },
 ];

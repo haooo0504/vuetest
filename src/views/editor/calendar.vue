@@ -1,145 +1,335 @@
 <template>
   <div class="business-bg">
+    <div class="calendar-title">
+      <div @click="getPrev">
+        <i class="fas fa-angle-left"></i>
+      </div>
+      <p>{{ title }}</p>
+      <div @click="getNext">
+        <i class="fas fa-angle-right"></i>
+      </div>
+    </div>
+
+    <div class="calendar-button">
+      <div style="width: 80px">
+        <el-select v-model="value" placeholder="日" @change="change(value)">
+          <el-option
+            v-for="item in options1"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </div>
+      <div style="width: 50px">
+        <el-button size="small" @click="getToday">今日</el-button>
+      </div>
+      <div>
+        <el-button type="primary" size="small" @click="add">新增</el-button>
+        <el-button type="primary" size="small" @click="report">回報</el-button>
+      </div>
+    </div>
     <div ref="elementRef" class="calendar">
       <FullCalendar :options="options" ref="calendarRef" />
     </div>
-    <div style="margin-top: 10px">
-      <el-button size="mini" type="primary" @click="add">新增</el-button>
-      <el-button size="mini" type="primary" @click="add">回報</el-button>
-      <el-button :plain="true" @click="takePhoto" class="uploadPhotos"
-        >拍照</el-button
-      >
-      <Photo ref="clearCamera" v-if="visible" @closed="clearIntervals" />
-    </div>
-    <div class="demo-collapse" style="margin-top: 10px">
-      <el-collapse
-        v-model="test"
-        @change="handleChange"
-        v-for="(r, index) of test"
+
+    <div class="schedule-list">
+      <!-- <p v-if="!test3.length">尚無資料</p> -->
+      <p v-if="hasNotReport.length">未回報</p>
+      <el-card
+        class="box-card"
+        v-model="hasNotReport"
+        v-for="(r, index) of hasNotReport"
         :key="index"
       >
-        <el-collapse-item :title="r.title" name="1">
-          <div>
-            Consistent with real life: in line with the process and logic of
-            real life, and comply with languages and habits that the users are
-            used to;
-          </div>
-          <div>
-            Consistent within interface: all elements should be consistent, such
-            as: design style, icons and texts, position of elements, etc.
-          </div>
-          <el-button size="mini" type="primary" @click="add" class="report"
-            >回報</el-button
-          >
-        </el-collapse-item>
-      </el-collapse>
+        <div class="card-header">
+          <span>{{ `${r.start.split(" ")[0]} ${r.title}` }}</span>
+          <el-button class="button" text @click="report(r.id)">回報</el-button>
+        </div>
+      </el-card>
+    </div>
+    <div class="schedule-list">
+      <p v-if="hasReport.length">已回報</p>
+      <el-card
+        class="box-card"
+        v-model="hasReport"
+        v-for="(r, index) of hasReport"
+        :key="index"
+      >
+        <div class="card-header">
+          <span>{{ `${r.start.split(" ")[0]} ${r.title}` }}</span>
+          <el-button class="button" text @click="report(r.id)">回報</el-button>
+        </div>
+      </el-card>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import "@fullcalendar/core/vdom";
-import FullCalendar from "@fullcalendar/vue3";
 import type { CalendarOptions } from "@fullcalendar/vue3";
+import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
-import { reactive, ref, onMounted, computed } from "vue";
+import { reactive, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { INITIAL_EVENTS, createEventId } from "./calendarSet";
-import Photo from "./camera.vue";
+import { INITIAL_EVENTS } from "./calendarSet";
+// import { businessStores } from "/@/store/modules/business/index";
 
-const test3 = ref([]);
-// const test2=computed(()=>{
-//   title:
-// })
+const value = ref("");
+const options1 = [
+  {
+    value: "Option1",
+    label: "月",
+  },
+  {
+    value: "Option2",
+    label: "週",
+  },
+  {
+    value: "Option3",
+    label: "日",
+  },
+  {
+    value: "Option4",
+    label: "清單",
+  },
+];
 
-const activeNames = reactive({
-  name: "",
-  start: "",
-});
+const test3 = ref<any>([]);
+const hasReport = ref<any>([]);
+const hasNotReport = ref<any>([]);
+
+// const test1 = businessStores();
 
 const router = useRouter();
-const id = ref();
+// const id = ref()
 // 讓行事曆可以在各種視窗自動調整大小
 const elementRef = ref();
-const calendarRef = ref<typeof FullCalendar | null>(null);
+const calendarRef = ref<InstanceType<typeof FullCalendar>>();
 const resize = new ResizeObserver(() => {
   calendarRef.value?.getApi().updateSize();
 });
+
+// 取得當天行程
+const getDaySchedule = () => {
+  console.log(222);
+  hasReport.value = [];
+  hasNotReport.value = [];
+  let curSchedule = INITIAL_EVENTS.filter((sche) => {
+    let date = title.value.split("/").join("");
+    let scheDate = sche.start?.split(" ")[0].split("-").join("");
+    return scheDate == date ? true : false;
+  });
+  curSchedule.forEach((sche) => {
+    if (sche.position) {
+      hasReport.value.push(sche);
+      console.log(hasReport.value);
+    } else {
+      hasNotReport.value.push(sche);
+    }
+  });
+};
+
+// 取得當週行程
+const getWeekSchedule = () => {
+  hasReport.value = [];
+  hasNotReport.value = [];
+  let startDate = parseInt(title.value.split("-")[0].split("/").join(""));
+  let endDate = parseInt(title.value.split("-")[1].split("/").join(""));
+  let curSchedule = INITIAL_EVENTS.filter((sche) => {
+    let scheDate = parseInt(sche.start?.split(" ")[0].split("-").join(""));
+    return scheDate >= startDate && scheDate <= endDate ? true : false;
+  });
+  curSchedule.forEach((sche) => {
+    if (sche.position) {
+      hasReport.value.push(sche);
+      console.log(hasReport.value);
+    } else {
+      hasNotReport.value.push(sche);
+    }
+  });
+};
+
+// 取得當月行程
+const getMonthSchedule = () => {
+  console.log(333);
+
+  hasReport.value = [];
+  hasNotReport.value = [];
+  let startDate = parseInt(title.value.split("-")[0].split("/").join(""));
+  let endDate = parseInt(title.value.split("-")[1].split("/").join(""));
+  let curSchedule = INITIAL_EVENTS.filter((sche) => {
+    let scheDate = parseInt(sche.start?.split(" ")[0].split("-").join(""));
+    return scheDate >= startDate && scheDate <= endDate ? true : false;
+  });
+  curSchedule.forEach((sche) => {
+    if (sche.position) {
+      hasReport.value.push(sche);
+      console.log(hasReport.value.length);
+    } else {
+      hasNotReport.value.push(sche);
+      console.log(hasNotReport.value);
+    }
+  });
+};
 onMounted(() => {
   //綁定組件監聽尺寸變化
   resize.observe(elementRef.value);
+  getTitle();
+  getDaySchedule();
 });
-const handleDateSelect = (selectInfo) => {
-  // eslint-disable-next-line no-alert
-  const title = prompt("請輸入標題");
-  const calendarApi = selectInfo.view.calendar;
-  calendarApi.unselect(); // clear date selection
-  if (title) {
-    calendarApi.addEvent({
-      id: createEventId(),
-      title,
-      start: selectInfo.startStr,
-      end: selectInfo.endStr,
-      allDay: selectInfo.allDay,
-    });
+
+const curView = ref("Option3");
+console.log(typeof curView.value);
+// 切換日、週、月選擇框
+const change = (value: string) => {
+  // 月
+  if (value == "Option1") {
+    curView.value = value;
+    calendarRef.value?.getApi().changeView("dayGridMonth");
+    getTitle();
+    getMonthSchedule();
+  }
+  // 週
+  if (value == "Option2") {
+    curView.value = value;
+    calendarRef.value?.getApi().changeView("dayGridWeek");
+    getTitle();
+    getWeekSchedule();
+  }
+  // 日
+  if (value == "Option3") {
+    curView.value = value;
+    calendarRef.value?.getApi().changeView("timeGridDay");
+    getTitle();
+    getDaySchedule();
+  }
+  // 清單
+  if (value == "Option4") {
+    curView.value = value;
+    calendarRef.value?.getApi().changeView("listMonth");
+    getTitle();
+    getMonthSchedule();
   }
 };
 
-const refetchEvents = (arg) => {
-  console.log(arg);
-};
-const add = () => {
-  router.push({ name: "newSchedule" });
-  INITIAL_EVENTS.push({
-    title: "123",
-    start: "2022-11-12",
-    id: "123",
-  });
-  calendarRef.value?.getApi().refetchEvents();
-  console.log(calendarRef.value?.getApi());
+// 日曆時間
+const title = ref("");
+const getTitle = () => {
+  title.value = calendarRef.value?.getApi().view.title;
 };
 
-const test = [
-  {
-    title: "拜訪",
-    start: "2022-11-18",
-    abc: "abc",
-  },
-  {
-    title: "拜訪1",
-    start: "2022-11-18",
-  },
-  {
-    id: "a",
-    title: "拜訪",
-    start: "2022-11-19",
-  },
-  {
-    id: "ab",
-    title: "拜訪",
-    start: "2022-11-22",
-  },
-];
-const submitForm = reactive({
-  title: "",
-  start: null as number | null,
+// 切換到今天時間
+const getToday = () => {
+  calendarRef.value?.getApi().today();
+  getTitle();
+  switch (curView.value) {
+    case "Option1":
+      getMonthSchedule();
+      break;
+    case "Option2":
+      getWeekSchedule();
+      break;
+    case "Option3":
+      getDaySchedule();
+      break;
+    case "Option4":
+      getMonthSchedule();
+      break;
+    default:
+      break;
+  }
+};
+
+// 切換到上一月/天
+const getPrev = () => {
+  calendarRef.value?.getApi().prev();
+  getTitle();
+  switch (curView.value) {
+    case "Option1":
+      getMonthSchedule();
+      break;
+    case "Option2":
+      getWeekSchedule();
+      break;
+    case "Option3":
+      getDaySchedule();
+      break;
+    case "Option4":
+      getMonthSchedule();
+      break;
+    default:
+      break;
+  }
+};
+
+// 切換到下一月/天
+const getNext = () => {
+  calendarRef.value?.getApi().next();
+  getTitle();
+  switch (curView.value) {
+    case "Option1":
+      getMonthSchedule();
+      break;
+    case "Option2":
+      getWeekSchedule();
+      break;
+    case "Option3":
+      getDaySchedule();
+      break;
+    case "Option4":
+      getMonthSchedule();
+      break;
+    default:
+      break;
+  }
+};
+
+// const handleDateSelect = (selectInfo) => {
+//   // eslint-disable-next-line no-alert
+//   const title = prompt('請輸入標題')
+//   const calendarApi = selectInfo.view.calendar
+//   calendarApi.unselect() // clear date selection
+//   if (title) {
+//     calendarApi.addEvent({
+//       id: createEventId(),
+//       title,
+//       start: selectInfo.startStr,
+//       end: selectInfo.endStr,
+//       allDay: selectInfo.allDay
+//     })
+//   }
+// }
+
+const add = () => {
+  router.push({ name: "newSchedule" });
+};
+const report = (info: string) => {
+  router.push({ name: "editSchedule", params: { id: info } });
+};
+
+// 判斷行程是否回報
+INITIAL_EVENTS.filter((list) => {
+  if (list.position) {
+    list.backgroundColor = "#93cabd";
+  } else {
+    list.backgroundColor = "#ddb26b";
+  }
 });
 
 const options = reactive({
   plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
-  initialView: "dayGridMonth",
-  headerToolbar: {
-    start: "title",
-    center: "prev,today,next",
-    end: "dayGridMonth,dayGridWeek,timeGridDay,listDay",
-  },
+  initialView: "timeGridDay",
+  headerToolbar: false,
   titleFormat: {
     year: "numeric",
     month: "numeric",
+    day: "2-digit",
   },
+  locale: "zn-ch",
   buttonText: {
     today: "今日",
     month: "月",
@@ -151,65 +341,108 @@ const options = reactive({
   selectable: true,
   weekends: true,
   dayMaxEventRows: true,
+  // navLinks: true,
   moreLinkContent: "...",
   eventDisplay: "list-item",
-  titleRangeSeparator: ",",
+  titleRangeSeparator: "-",
   longPressDelay: 800,
-
-  dateClick: (info) => {
-    let schedule = JSON.parse(JSON.stringify(options.events));
-    let curSchedule = schedule.filter((sche) => {
-      let date = info.dateStr;
-      return sche.start == date ? true : false;
-    });
-
-    console.log(curSchedule);
-    test3.value.push(curSchedule);
-    alert(curSchedule);
+  weekText: "周",
+  dayHeaderContent(item) {
+    return item.text.split("（")[0];
   },
-  select: handleDateSelect,
-  initialEvents: INITIAL_EVENTS,
+  // navLinkDayClick: (date, jsEvent) => {
+  // },
+
+  eventClick: (info) => {
+    console.log(info.event.id);
+
+    // change the border color just for fun
+    // info.el.style.borderColor = 'red'
+  },
+  dateClick: (info) => {
+    hasReport.value = [];
+    hasNotReport.value = [];
+    // let schedule = JSON.parse(JSON.stringify(options.events))
+    let curSchedule = INITIAL_EVENTS.filter((sche) => {
+      let date = info.dateStr;
+      return sche.start?.split(" ")[0] == date ? true : false;
+    });
+    curSchedule.forEach((sche) => {
+      if (sche.position) {
+        hasReport.value.push(sche);
+      } else {
+        hasNotReport.value.push(sche);
+      }
+    });
+    report;
+    test3.value.push(...curSchedule);
+  },
+  // select: handleDateSelect,
+  events: INITIAL_EVENTS,
 } as CalendarOptions);
-// const aaa = () => {
-//   options.events.push({ id: 'b', start: '2022-11-11', title: 'aaa' })
-// }
-// aaa()
-
-//控制拍照功能的显示和隐藏
-const visible = ref(false);
-const takePhoto = () => {
-  visible.value = true;
-};
-
-//清除拍照功能
-const clearCamera = ref();
-const clearIntervals = () => {
-  nextTick(() => {
-    clearCamera.value.stopNavigator();
-  });
-  visible.value = false;
-};
 </script>
 
 <style lang="scss" scoped>
+.business-bg {
+  width: 98%;
+  min-height: 80vh;
+  padding-right: 2.5%;
+  padding-left: 2.5%;
+  margin: 30px auto 60px auto;
+  overflow: hidden;
+  background-color: #fff;
+  border: solid 1px #ebeef5;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+}
+.calendar-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+}
+.calendar-button {
+  display: flex;
+  margin-top: 0px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.schedule-list {
+  margin-top: 10px;
+}
 .calendar {
   margin-top: 10px;
 }
 :deep(.fc-toolbar-chunk) {
   margin-top: 10px;
 }
-:deep(.fc-header-toolbar) {
-  // display: inline;
-  font-size: 12px;
-}
-:deep(.fc-col-header) {
-  font-size: 10px;
-}
-:deep(.fc-view-harness) {
-  height: 450px !important;
-}
+
 .report {
   float: right;
   margin: 20px;
+}
+
+:deep(.fc .fc-button-primary:not(:disabled).fc-button-active),
+:deep(.fc .fc-button-primary:not(:disabled):active) {
+  background-color: #93cabd;
+}
+// :deep(.fc .fc-button-primary:not(:disabled):active) {
+//   background-color: #fff;
+// }
+:deep(.fc-event-time) {
+  overflow: hidden;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.box-card {
+  margin-bottom: 10px;
+}
+
+:deep(.fc .fc-day-today) {
+  background-color: #effaf7;
 }
 </style>

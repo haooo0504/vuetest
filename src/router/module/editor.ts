@@ -40,6 +40,12 @@ export default {
       meta: { menu: { title: "newSchedule" } },
     },
     {
+      name: "addSchedule",
+      path: "addSchedule",
+      component: () => import("@/views/editor/addSchedule.vue"),
+      meta: { menu: { title: "addSchedule" } },
+    },
+    {
       name: "toastcal",
       path: "toastcal",
       component: () => import("@/views/editor/toastcal.vue"),
