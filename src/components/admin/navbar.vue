@@ -38,7 +38,7 @@
           </el-icon> -->
           <section class="w-[30px] h-[30px] overflow-hidden rounded-full mr-2">
             <el-image
-              :src="useStore.currentphoto ?? '/image/photo.jpg'"
+              :src="newuserinfo.avatar ?? '/image/photo.jpg'"
               fit="cover"
               class="user_avatar z-20"
             >
@@ -90,10 +90,10 @@ const name = ref(useStore.info?.name);
 //     name.value = useStore.info?.name;
 //   }
 // );
-// const newuserinfo = (await firebaseStore.get(
-//   "users",
-//   useStore.info?.account!
-// )) as IUser;
+const newuserinfo = (await firebaseStore.get(
+  "users",
+  useStore.info?.account!
+)) as IUser;
 
 let isFullScreen = false;
 const fullscreen = () => {

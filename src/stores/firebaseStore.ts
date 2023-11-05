@@ -44,16 +44,18 @@ export const firebaseStores = defineStore({
     },
     // (獲取單筆資料)
     async get(name: string, id: string): Promise<DocumentData | null> {
+      console.log(name, id);
       const getdoc = await getDoc(doc(db, name, id));
 
       return getdoc.exists() ? getdoc.data() : null;
     },
     // (更新資料)
     async update(name: string, id: string, obj: object) {
-      if (utils.store.get(CacheEnum.TOKEN_NAME) != "admin123") {
+      if (utils.store.get(CacheEnum.TOKEN_NAME) != "hao05hao05") {
         msg("沒有權限修改資料", "error");
       } else {
         try {
+          console.log(db, name, id, obj);
           await updateDoc(doc(db, name, id), obj);
           ElMessage.success("儲存成功");
         } catch (e) {

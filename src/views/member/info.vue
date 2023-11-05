@@ -8,7 +8,7 @@
         >
           <i class="fas fa-image absolute z-10 text-lg"></i>
           <el-image
-            :src="userStore.currentphoto ?? '/image/photo.jpg'"
+            :src="newuserinfo.avatar ?? '/image/photo.jpg'"
             fit="cover"
             class="user_avatar absolute z-20"
           >

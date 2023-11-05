@@ -27,29 +27,5 @@ export default {
       component: () => import("@/views/editor/base.vue"),
       meta: { menu: { title: "base" }, permission: "admin" },
     },
-    {
-      name: "calendar",
-      path: "calendar",
-      component: () => import("@/views/editor/calendar.vue"),
-      meta: { menu: { title: "calendar" } },
-    },
-    {
-      name: "newSchedule",
-      path: "newSchedule",
-      component: () => import("@/views/editor/newSchedule.vue"),
-      meta: { menu: { title: "newSchedule" } },
-    },
-    {
-      name: "addSchedule",
-      path: "addSchedule",
-      component: () => import("@/views/editor/addSchedule.vue"),
-      meta: { menu: { title: "addSchedule" } },
-    },
-    {
-      name: "toastcal",
-      path: "toastcal",
-      component: () => import("@/views/editor/toastcal.vue"),
-      meta: { menu: { title: "toastcal" } },
-    },
   ],
 } as RouteRecordRaw;

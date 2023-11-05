@@ -134,6 +134,7 @@ const sub = () => {
     close();
   }
   cropper.value?.getCropBlob(async (data: Blob) => {
+    console.log(data);
     loading.value = true;
     await storageStore.upload(data, `users/${props.userAccount}`).then(() => {
       storageStore.getURL(`users/${props.userAccount}`).then((url) => {

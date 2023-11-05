@@ -89,6 +89,7 @@ export default defineStore({
           userForm.password
         )
           .then((userCredential) => {
+            console.log(userCredential);
             const user = userCredential.user;
             const routeName =
               utils.store.get(CacheEnum.REDIRECT_ROUTE_NAME) ?? "home";

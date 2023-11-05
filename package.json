@@ -38,7 +38,7 @@
     "typed.js": "^2.0.12",
     "vee-validate": "^4.5.8",
     "vue": "^3.2.33",
-    "vue-cropper": "^1.0.3",
+    "vue-cropper": "^1.1.1",
     "vue-echarts": "^6.1.0",
     "vue-router": "^4.0.16",
     "vue3-treeselect": "^0.1.10",
